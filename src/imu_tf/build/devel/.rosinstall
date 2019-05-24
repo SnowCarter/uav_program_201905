@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /program/catkin_ws/src/imu_tf/build/devel/setup.sh

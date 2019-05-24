@@ -1,0 +1,8 @@
+prefix=/home/nuc/ws/uav_program_201905/devel
+
+Name: filter_kalman
+Description: Description of filter_kalman
+Version: 0.0.0
+Cflags: -I/home/nuc/ws/uav_program_201905/src/filter_kalman/include
+Libs: -L/home/nuc/ws/uav_program_201905/devel/lib -lfilter_kalman
+Requires: roscpp rospy std_msgs

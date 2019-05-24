@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Launch the grid map simple demo node -->
+  <node pkg="imu_tf" type="imu_tf_node" name="imu_tf" output="screen" >
+  </node>
+</launch>

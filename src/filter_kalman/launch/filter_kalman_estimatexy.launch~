@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- Launch the filter of kalman node -->
+  <node pkg="filter_kalman" type="filter_kalman" name="filter_kalman" output="screen" >
+    <param name="map_length"        type="double"   value="1"          /><!--40-->
+    <param name="map_resolution"    type="double"   value="0.1"         /><!--1-->
+    <param name="filter_radius"     type="double"   value="0.13"         />
+    <param name="height_compensate" type="double"   value="0"		/><!--1.7-->
+    <param name="fusedMapLength"    type="double"   value="200"	/>
+    <param name="point_cloud_type"    type="double"   value="2.0"	/><!-- 1.0: sensor_msgs::PointCloud   2.0:sensor_msgs::PointCloud2-->
+<!--parameter of analysing the accuracy of ESMF -->
+    <param name="position1"	    type="double"   value="2"	/><!--positionx测试一下中间点滤波，此参数如需使用，请删除-->
+    <param name="position2"	    type="double"   value="1.5"	/><!--positiony-->
+<!--For velodyne bag-->
+    <param name="sub_points"    type="string"   value="/velodyne_points"  /><!--1:/velodyne16RingPC  2:/kitti/velo/pointcloud-->
+    <param name="SensorFrame"   type="string"   value="/base"       /><!--1:/velodyne16  2:/base_link是kitti数据集里的，/base 是nsh &blam里的--><!--/velo_link-->
+<!--For kitti data set bag-->
+    <!--param name="sub_points"    type="string"   value="/kitti/velo/pointcloud"  /--><!--1:/velodyne16RingPC  2:/kitti/velo/pointcloud-->
+    <!--param name="SensorFrame"   type="string"   value="/velo_link"       /--><!--1:/velodyne16  2:/base_link--><!--/velo_link-->
+<!--For ChenCheng bag-->
+    <!--param name="sub_points"    type="string"   value="/velodyne16RingPC"  /--><!--1:/velodyne16RingPC  2:/kitti/velo/pointcloud-->
+    <!--param name="SensorFrame"   type="string"   value="/velodyne16"       /--><!--1:/velodyne16  2:/base_link--><!--/velo_link-->
+
+
+   
+    <param name="FixFrame"      type="string"   value="/world"/>
+
+    <param name="use_forget"	type="bool"    	value="false"/>
+    <param name="use_KF"	type="bool"	value="false"/>
+    <param name="use_ESMF"	type="bool"	value="false"/><!--不使用ESMF-->
+    <param name="use_FilterMap"	type="bool"	value="false"			/>
+    <!--param name="use_move"	type="bool"	value="true"			/>
+    <param name="use_setPosition"	type="bool"	value="false"		/-->
+    <param name="use_analyse_ESMF"	type="bool"	value="false"			/>
+    <param name="use_estimatexy"    type= "bool"    value="true"/>
+
+
+
+  </node>
+</launch>

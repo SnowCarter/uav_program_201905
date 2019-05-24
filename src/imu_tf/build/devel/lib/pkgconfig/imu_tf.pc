@@ -1,0 +1,8 @@
+prefix=/program/catkin_ws/src/imu_tf/build/devel
+
+Name: imu_tf
+Description: Description of imu_tf
+Version: 0.0.0
+Cflags: -I/program/catkin_ws/src/imu_tf/include
+Libs: -L/program/catkin_ws/src/imu_tf/build/devel/lib -limu_tf
+Requires: roscpp rospy tf

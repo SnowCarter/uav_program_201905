@@ -1,0 +1,13 @@
+使用包21，修改回move的方式，分辨率1，长宽30
+
+运行很简单哦：
+先运行含有 点云 的终端
+运行：含有tf信息 的终端
+运行：filterkalman 的launch 文件
+
+如果有blam 文件:修改bag文件的路径为自己需要运行的bag文件
+然后：
+运行blam的launch文件，然后运行filterkalman 的launch文件。
+
+打开rviz
+
