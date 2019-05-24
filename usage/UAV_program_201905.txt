@@ -1,0 +1,18 @@
+record the laser and position information:
+
+first run the drivers of VLP-16 and UAV information
+bash 1_velodyne.sh
+bash 2_mavros.sh
+
+another terminal:
+rosbag record -a
+
+the main topic is the laser data and mavros topic about the position.
+
+run the program :
+
+bash 1_velodyne.sh
+bash 2_mavros.sh
+bash 3_imu.sh
+bash 4_uav_program.sh
+

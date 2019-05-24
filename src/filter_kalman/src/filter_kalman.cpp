@@ -98,7 +98,7 @@ void Center_map::dataCallback2(const sensor_msgs::PointCloud2ConstPtr &cloud_msg
     if(use_FilterMap_) filterMap();//smooth the map similar with forget();
     
     analyse_ESMF();
-    ROS_INFO("After Height Estimate");
+   // ROS_INFO("After Height Estimate");
 
     publish();
 
@@ -137,6 +137,7 @@ void Center_map::analyse_ESMF(){//
     geometry_publish_data.pose.position.z = height_between_land_and_uav;
     // there are no changes to other elements.
     accuracy_pub.publish(geometry_publish_data);
+    std::cout << "the x,y,z postion of UAV:"<<position_point(0)<< ","<< position_point(1)<< ","<< position_point(2) << std::endl;
 
 
 
