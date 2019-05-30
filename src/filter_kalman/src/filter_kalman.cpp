@@ -147,11 +147,14 @@ void Center_map::analyse_ESMF(){//
         // std::cout << "mean, sumOfweight, position_point(2), distance"<< mean << ","<< sumOfWeight << ","<< position_point(2) << ","<< height_between_land_and_uav << std::endl;
         
 
-        geometry_msgs::PoseStamped geometry_publish_data;
-        geometry_publish_data.pose.position.z = height_between_land_and_uav;
-        // there are no changes to other elements.
-        accuracy_pub.publish(geometry_publish_data);
-        //std::cout << "the x,y,z postion of UAV:"<<position_point(0)<< ","<< position_point(1)<< ","<< position_point(2) << std::endl;
+        if(height_between_land_and_uav<100 && height_between_land_and_uav >=0){
+            geometry_msgs::PoseStamped geometry_publish_data;
+            geometry_publish_data.pose.position.z = height_between_land_and_uav;
+            // there are no changes to other elements.
+            accuracy_pub.publish(geometry_publish_data);
+            //std::cout << "the x,y,z postion of UAV:"<<position_point(0)<< ","<< position_point(1)<< ","<< position_point(2) << std::endl;
+        }
+       
     }
 
 
