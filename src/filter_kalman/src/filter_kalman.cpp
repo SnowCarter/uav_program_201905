@@ -18,7 +18,7 @@ Center_map::~Center_map(){}
 void Center_map::readparameters() {
     nodehandle_.param("map_length",     map_length_,        double(30.0));
     nodehandle_.param("map_resolution", map_resolution_,    double(1)   );
-    nodehandle_.param("filter_radius",  filter_radius_param_,     double(0.2) );
+    nodehandle_.param("filter_radius",  filter_radius_param_,     double(0.5) );
     nodehandle_.param("height_compensate",height_compensate_,      double(0));
     nodehandle_.param("fusedMapLength",   fusedMapLength_,         double(1000.0));
     nodehandle_.param("point_cloud_type", point_cloud_type,         double(1.0));
@@ -57,8 +57,10 @@ void Center_map::initializer(const ros::NodeHandle &n)
     grid_map_initial();
     out_map_count =0;
     //添加刚体变换矩阵 T=3x1 & R=3x3
-    translation_vector_laser << 0,0,0;
-    rotation_matrix_laser=Eigen::Matrix3d::Identity();
+    translation_vector_laser << 0.154796,0.019059,0.1760485;
+    rotation_matrix_laser<<  0.1575, 0.904, -0.968,
+                            -1.903 ,  0.342, -0.083,
+                             0.3146, 0.919,  0.238;
 
 }
 
@@ -115,29 +117,38 @@ void Center_map::analyse_ESMF(){//
 
     position_point=transform.translation().matrix();//store 无人机所在中心点的位置
     float height_between_land_and_uav;//无人机与地面之间的距离
-    double filter_radius_ = filter_radius_param_;
+    double filter_radius_ = 0.5;
     double mean = 0.0;
     double sumOfWeight = 0.0;
 
     grid_map::Position currentPosition_(position_point(0),position_point(1));//get无人机所在中心点的位置
     for(grid_map::CircleIterator circleIt(map_dwq, currentPosition_,filter_radius_); !circleIt.isPastEnd(); ++circleIt){
-        if(!map_dwq.isValid(*circleIt,"elevationh")) continue;
-        grid_map::Position currentPositionInCircle;
-        map_dwq.getPosition(*circleIt, currentPositionInCircle);
+        if(map_dwq.isValid(*circleIt,"elevationh")) {
+            grid_map::Position currentPositionInCircle;
+            map_dwq.getPosition(*circleIt, currentPositionInCircle);
 
-        double distance = (currentPosition_ - currentPositionInCircle).norm();
-        double weight = pow(filter_radius_ - distance, 2);
-        mean += weight * map_dwq.at("elevationh", *circleIt);
-        sumOfWeight += weight;        
+            double distance = (currentPosition_ - currentPositionInCircle).norm();
+
+            double weight = 100.0*pow(filter_radius_ - distance, 2);
+
+            std::cout <<"distance, weight: " << distance <<"," << weight << std::endl;
+
+
+            mean += weight * map_dwq.at("elevationh", *circleIt);
+            sumOfWeight += weight;      
+        }  
     }
 
     
-    height_between_land_and_uav = (float)abs(position_point(2) - (mean / sumOfWeight));
+    height_between_land_and_uav = abs((float)(position_point(2) - (mean / sumOfWeight)));
+   // std::cout << "mean, sumOfweight, position_point(2), distance"<< mean << ","<< sumOfWeight << ","<< position_point(2) << ","<< height_between_land_and_uav << std::endl;
+    
+
     geometry_msgs::PoseStamped geometry_publish_data;
     geometry_publish_data.pose.position.z = height_between_land_and_uav;
     // there are no changes to other elements.
     accuracy_pub.publish(geometry_publish_data);
-    std::cout << "the x,y,z postion of UAV:"<<position_point(0)<< ","<< position_point(1)<< ","<< position_point(2) << std::endl;
+    //std::cout << "the x,y,z postion of UAV:"<<position_point(0)<< ","<< position_point(1)<< ","<< position_point(2) << std::endl;
 
 
 
@@ -226,15 +237,15 @@ void Center_map::ESMFdwq(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud)
         Eigen::Vector3f point_in_world;
 
         // u can get the R and T by test using motion capture.
-        point_in_robot = ((rotation_matrix_laser.cast<float>() * point_in_sensor) + translation_vector_laser);
-
+       // point_in_robot = ((rotation_matrix_laser.cast<float>() * point_in_sensor) + translation_vector_laser);
+       point_in_robot = point_in_sensor;
         // translate the point cloud into world coordinate from robotic coordinate using odometry information which can be got by imu_tf.node.
         point_in_world = ((rotationSensorToWorld_.toImplementation().cast<float>())*point_in_robot)
                           +(translationSensorToWorld_.toImplementation().cast<float>());
                        
         grid_map::Index index;
         grid_map::Position position(point_in_world(0),point_in_world(1));
-        if (!map_dwq.getIndex(position,index) || sqrt(point.x*point.x + point.y*point.y +point.z*point.z)<position1_) continue;
+        if (!map_dwq.getIndex(position,index) || sqrt(point.x*point.x + point.y*point.y +point.z*point.z)<2) continue;
         auto &elevationh = map_dwq.at("elevationh",index);
         auto &elevationl  = map_dwq.at("elevationl",index);
         auto &sigmah  = map_dwq.at("sigmah",index);

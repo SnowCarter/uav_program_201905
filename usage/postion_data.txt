@@ -1,0 +1,17 @@
+
+roslaunch mavros px4.launch fcu_url:=/dev/ttyACM0:921600
+rostopic echo /mavros/local_position/pose
+
+laser_orientation:
+w:-0.7538
+x: 0.6357
+y: 0.1086
+z:-0.1244
+
+
+UAV_orientation:
+w:-0.5913
+x: 0.00016
+y: 0.0068
+z:-0.8063
+

@@ -1,11 +1,18 @@
 <?xml version="1.0"?>
 
 <launch>
+<param name = "/use_sim_time" value = "false" />
+  <param name="robot_description"
+    textfile="$(find filter_kalman)/urdf/uav_laser_tf.urdf" />
+
+<node name="robot_state_publisher" pkg="robot_state_publisher"
+    type="robot_state_publisher" />
+
 
   <!-- Launch the filter of kalman node -->
   <node pkg="filter_kalman" type="filter_kalman" name="filter_kalman" output="screen" >
-    <param name="map_length"        type="double"   value="200"          /><!--40-->
-    <param name="map_resolution"    type="double"   value="0.5"         /><!--1-->
+    <param name="map_length"        type="double"   value="10"          /><!--40-->
+    <param name="map_resolution"    type="double"   value="0.1"         /><!--1-->
     <param name="filter_radius"     type="double"   value="0.13"         />
     <param name="height_compensate" type="double"   value="0"		/><!--1.7-->
     <param name="fusedMapLength"    type="double"   value="200"	/>
@@ -15,7 +22,7 @@
     <param name="position2"	    type="double"   value="1.5"	/><!--positiony-->
 <!--For coordinate system-->
     <param name="sub_points"    type="string"   value="/velodyne_points"  /><!--1:/velodyne16RingPC  2:/kitti/velo/pointcloud-->
-    <param name="SensorFrame"   type="string"   value="/uav"       /><!-- robotic coordinate system-->
+    <param name="SensorFrame"   type="string"   value="/velodyne"       /><!-- robotic coordinate system-->
    
     <param name="FixFrame"      type="string"   value="/world"/><!-- fixed coordinate system-->
 
