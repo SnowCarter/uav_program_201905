@@ -131,25 +131,28 @@ void Center_map::analyse_ESMF(){//
 
             double weight = 100.0*pow(filter_radius_ - distance, 2);
 
-            std::cout <<"distance, weight: " << distance <<"," << weight << std::endl;
+            // std::cout <<"distance, weight: " << distance <<"," << weight << std::endl;
 
 
             mean += weight * map_dwq.at("elevationh", *circleIt);
             sumOfWeight += weight;      
         }  
     }
+    std::cout <<"  height: " << (position_point(2) - (mean / sumOfWeight)) << std::endl;
 
-    
-    height_between_land_and_uav = abs((float)(position_point(2) - (mean / sumOfWeight)));
-   // std::cout << "mean, sumOfweight, position_point(2), distance"<< mean << ","<< sumOfWeight << ","<< position_point(2) << ","<< height_between_land_and_uav << std::endl;
-    
+    if(position_point(2) - (mean / sumOfWeight)>=0)
+    {
+        height_between_land_and_uav = (float)(position_point(2) - (mean / sumOfWeight));
+        
+        // std::cout << "mean, sumOfweight, position_point(2), distance"<< mean << ","<< sumOfWeight << ","<< position_point(2) << ","<< height_between_land_and_uav << std::endl;
+        
 
-    geometry_msgs::PoseStamped geometry_publish_data;
-    geometry_publish_data.pose.position.z = height_between_land_and_uav;
-    // there are no changes to other elements.
-    accuracy_pub.publish(geometry_publish_data);
-    //std::cout << "the x,y,z postion of UAV:"<<position_point(0)<< ","<< position_point(1)<< ","<< position_point(2) << std::endl;
-
+        geometry_msgs::PoseStamped geometry_publish_data;
+        geometry_publish_data.pose.position.z = height_between_land_and_uav;
+        // there are no changes to other elements.
+        accuracy_pub.publish(geometry_publish_data);
+        //std::cout << "the x,y,z postion of UAV:"<<position_point(0)<< ","<< position_point(1)<< ","<< position_point(2) << std::endl;
+    }
 
 
 }
