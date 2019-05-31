@@ -150,6 +150,7 @@ void Center_map::analyse_ESMF(){//
         if(height_between_land_and_uav<100 && height_between_land_and_uav >=0){
             geometry_msgs::PoseStamped geometry_publish_data;
             geometry_publish_data.pose.position.z = height_between_land_and_uav;
+            geometry_publish_data.header.stamp = ros::Time::now();
             // there are no changes to other elements.
             accuracy_pub.publish(geometry_publish_data);
             //std::cout << "the x,y,z postion of UAV:"<<position_point(0)<< ","<< position_point(1)<< ","<< position_point(2) << std::endl;
@@ -251,7 +252,7 @@ void Center_map::ESMFdwq(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud)
                        
         grid_map::Index index;
         grid_map::Position position(point_in_world(0),point_in_world(1));
-        if (!map_dwq.getIndex(position,index) || sqrt(point.x*point.x + point.y*point.y +point.z*point.z)<2) continue;
+        if (!map_dwq.getIndex(position,index) || sqrt(point.x*point.x + point.y*point.y +point.z*point.z)<0.5) continue;
         auto &elevationh = map_dwq.at("elevationh",index);
         auto &elevationl  = map_dwq.at("elevationl",index);
         auto &sigmah  = map_dwq.at("sigmah",index);
